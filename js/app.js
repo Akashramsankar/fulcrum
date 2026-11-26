@@ -11,12 +11,16 @@
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const pace = (ms) => (reduceMotion ? Math.min(ms, 120) : ms);
 
-  /* ---------------- Puzzle selection (by UTC date) ----------------
-     Spec §14: one fixed reset for everyone, midnight UTC. Day 0 = puzzle #1. */
+  /* ---------------- Puzzle selection (by local date) ----------------
+     A new board at the player's local midnight. Day 0 = puzzle #1. Day numbers count
+     calendar dates, so the local date is mapped onto a UTC timestamp before dividing. */
   const EPOCH = Date.UTC(2026, 10, 24); // months are 0-based -> 10 = November
   const DAY = 86400000;
   const pad = (n) => String(n).padStart(2, '0');
-  const dayNumber = () => Math.floor((Date.now() - EPOCH) / DAY);
+  const dayNumber = () => {
+    const now = new Date();
+    return Math.round((Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) - EPOCH) / DAY);
+  };
   const dateForDay = (day) => new Date(EPOCH + day * DAY);
   const keyForDay = (day) => dateForDay(day).toISOString().slice(0, 10);
   const dayForKey = (key) => {
@@ -689,7 +693,9 @@
 
   let countdownTimer;
   function nextBoardIn() {
-    const s = Math.max(0, Math.floor((EPOCH + (dayNumber() + 1) * DAY - Date.now()) / 1000));
+    const now = new Date();
+    const nextMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    const s = Math.max(0, Math.floor((nextMidnight - now) / 1000));
     return `${pad(Math.floor(s / 3600))}:${pad(Math.floor((s % 3600) / 60))}:${pad(s % 60)}`;
   }
 

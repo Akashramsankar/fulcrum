@@ -33,7 +33,7 @@ URL parameters for testing:
 - Undo is unlimited and free. Reset restores the start, and Undo brings it back.
 - Grades: at par **Gold**, par + 1 **Solved**, under par **Exceptional** (shouldn't happen: par is proven). A day you play but don't balance counts as a **Miss**.
 - A miss state appears when you're out of moves or no word can be formed. Undo still works.
-- New puzzle at **midnight UTC** for everyone. Puzzle #1 is **24 Nov 2026** (`EPOCH` in `js/app.js`).
+- New puzzle at each player's **local midnight**. Puzzle #1 is **24 Nov 2026** (`EPOCH` in `js/app.js`).
 
 | | Par | Rack | Move cap | Quality gate |
 | --- | --- | --- | --- | --- |
